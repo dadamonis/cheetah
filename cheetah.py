@@ -123,16 +123,16 @@ def nodes():
     for i, s in enumerate(data, 1):
         for string in match_strings:
             if string in s:
-                matches[string].append('Line %03d: %s' % (i, s,))
+                matches[string].append({'Line': i, 'String': s})
     nodemerge = matches['Node joined'] + matches['Node left']
-    matches['Node'] = sorted(nodemerge)
+    matches['Node'] = sorted(nodemerge, key=lambda x: x['Line'])
     del matches['Node joined']
     del matches['Node left']
 
     for string in matches:
         print "%s:" % string.upper()
         if len(matches[string]) > 0:
-            print '\n'.join([str(myelement) for myelement in matches[string]])
+            print '\n'.join(['Line {0}, {1}'.format(x['Line'], x['String']) for x in matches[string]])
         else:
             # print "No %s entries in the log" % string.upper()
             print "0 entries in the log."
