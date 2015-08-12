@@ -125,8 +125,7 @@ def nodes():
             if string in s:
                 matches[string].append('Line %03d: %s' % (i, s,))
     nodemerge = matches['Node joined'] + matches['Node left']
-    matches['Node'] = nodemerge
-    nodemerge.sort(key=lambda x: x[0])
+    matches['Node'] = sorted(nodemerge)
     del matches['Node joined']
     del matches['Node left']
 
