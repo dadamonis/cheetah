@@ -165,7 +165,7 @@ def select():
             print "\nexiting...\n"
             exit()
         elif answer == "s":
-            search2()
+            search()
         elif answer == "sum":
             summary()
         else:
@@ -174,8 +174,10 @@ def select():
 parser = argparse.ArgumentParser(
     description="This utility is meant to help interactively parse an agent log file.")
 # the followign is a positional argument note the lack of --
-    parser.add_argument(
-        "logFile", nargs='?', help="the agent.log file(s) to parse.")
+parser.add_argument(
+    "logFile", nargs='?', help="the agent.log file(s) to parse.")
+# parser.add_argument(
+#   'files', metavar='N', type=str, nargs='+', help="files to be processed")
 parser.add_argument(
     "-a", "--assertion", help="pull all assertion messages; local messages only", action="store_true")
 parser.add_argument(
