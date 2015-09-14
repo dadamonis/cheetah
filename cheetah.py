@@ -4,11 +4,9 @@ import argparse
 from sys import argv
 from collections import OrderedDict
 
-now = time.strftime("%c")
 
-
-def all():
-    match_strings = ["NuoAgent version", "Assertion", "error", "failed", "INFO", "WARN", "SEVERE", "Local node", "Remote Node",
+def summary():
+    match_strings = ["NuoAgent version", "ASSERT", "error", "failed", "INFO", "WARN", "SEVERE", "Local node", "Remote Node",
                      "minorty partition", "heartbeat expired", "evict", "DIED", "exit code", "Database is inactive",
                      "Node joined", "Node left", "deleting database", "stopping database", "Environment.logEnv",
                      "LocalServer.convertTo"]
@@ -42,11 +40,7 @@ def all():
 
     print
     print "======================================"
-    print "Parsed on: " + now
-    print "======================================"
-    print
-    print "======================================"
-    print "==Total Message Counts"
+    print "== Total Message Counts =="
     print "======================================"
     for string in matches:
         if " (last %d lines)" % summarize_length not in string:
@@ -60,7 +54,7 @@ def assertion():
     print "\nDESCRIPTION:\nThe presence of one or more 'Assertion' messages in the agent.log",\
           "file indicates runtime failures of TEs and\or SMs.\nIf 'Assertion' messages are",\
           "present execute a 'nuodb [domain] > diagnose domain' command to collect debug information.\n"
-    match_strings = ["Assertion"]
+    match_strings = ["ASSERT"]
     # Create data structure to handle results
     matches = OrderedDict()
     for string in match_strings:
@@ -140,28 +134,26 @@ def nodes():
 
 
 def search():
-    # do something here
-    # print "\nEnter Search Value: "
-    print "DESCRIPTION\nInteractive search prompt.\n\n",\
-          "ATTN: Search is currently not 100% tested."
-    confirm = "y"
-    while confirm == "y":
+    print "DESCRIPTION:\nInteractive search prompt.\n\n",\
+          "ATTN: Search is case sensative.\n",\
+        "'\q' to quit."
+
+    while True:
         answer = raw_input("\nEnter Search Value : ")
-        print "Search Value is : ", answer  # DEBUG
-        for i, line in enumerate(data):
-            if answer in line:
-                for l in data[i:i + 1]:
-                    print "\n", l,
-                # print
-        confirm = raw_input("\nContinue Searching (y/n) : ")
-    print "\nReturning to options..."
-    select()
+        if answer == "\q":
+            print "\nReturning to options...(\q)"
+            select()
+        else:
+            for i, line in enumerate(data):
+                if answer in line:
+                    for l in data[i:i + 1]:
+                        print "\n", l,
 
 
 def select():
-    i = 1
-    while i <= 2:
-        print "\n Select one: \n a (Assertion Messages)\n e (Environment Details)\n n (List TEs and SMs)\n s (Search Prompt)\n q (Quit)"
+
+    while True:
+        print "\n Select one: \n a (Assertion Messages)\n e (Environment Details)\n n (List TEs and SMs)\n s (Search Prompt)\n sum (Summarized Informaton)\n q (Quit)"
         answer = raw_input("> ")
         if answer == "a":
             assertion()
@@ -170,21 +162,20 @@ def select():
         elif answer == "n":
             nodes()
         elif answer == "q":
-            print "\nexiting..."
+            print "\nexiting...\n"
             exit()
         elif answer == "s":
-            search()
+            search2()
+        elif answer == "sum":
+            summary()
         else:
             print "Invalid selection...try again:"
-            i = i + 1
-    print "exiting"
-
 
 parser = argparse.ArgumentParser(
     description="This utility is meant to help interactively parse an agent log file.")
 # the followign is a positional argument note the lack of --
-parser.add_argument(
-    "logFile", help="the agent.log file(s) to parse.")
+    parser.add_argument(
+        "logFile", nargs='?', help="the agent.log file(s) to parse.")
 parser.add_argument(
     "-a", "--assertion", help="pull all assertion messages; local messages only", action="store_true")
 parser.add_argument(
@@ -205,4 +196,4 @@ with open(args.logFile) as f:
     elif args.search:
         search()
     else:
-        all()
+        summary()
