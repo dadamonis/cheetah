@@ -17,7 +17,7 @@ optional arguments:
   -a, --assertion    pull all assertion messages; local messages only
   -e, --environment  pull the environment details
   -n, --nodelist     pull all TE / SM process info; remote and local
-  -s, --search       search prompt
+  -s, --search       search prompt (phase search)
  ```
 ##### Default Behavior  
 When executed with no optional arguments, cheetah retruns a summarized list of default items as well as some canned options for further investigation.
