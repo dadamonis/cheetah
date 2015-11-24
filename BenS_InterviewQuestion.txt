@@ -1,0 +1,56 @@
+################################################################################
+Ben's interview question: 
+
+Write a SQL statement that counts the number of bugs that effect each customer. 
+
+NOTE:
+Written and tested using NuoDB so, there will be SQL syntax differences when
+compared to other RDBMs vendors.
+################################################################################
+
+1. Create our table
+
+    SQL> create table t1 
+    (
+      id integer not NULL generated always as identity, 
+      customer_name varchar(64), 
+      bug_num varchar(64)
+    );
+
+2. Populate the table with the following data:
+
+    SQL> select * from t1;
+    
+     ID  CUSTOMER_NAME  BUG_NUM  
+     --- -------------- -------- 
+    
+      1  customer one   jira-01  
+      2  customer two   jira-02  
+      3  customer three jira-03  
+      4  customer four  jira-01  
+      5  customer one   jira-04  
+
+3. Count the number of bugs reported by each customer
+
+SQL> select customer_name, count (*) from t1 group by customer_name;
+
+    CUSTOMER_NAME  COUNT  
+    -------------- ------ 
+    
+    customer four    1    
+    customer three   1    
+    customer two     1    
+    customer one     2 
+
+
+4. Count the number of times each bug was reported.
+
+    SQL> select bug_num, count (*) from t1 group by bug_num;
+
+     BUG_NUM  COUNT  
+     -------- ------ 
+    
+     jira-04    1    
+     jira-03    1    
+     jira-02    1    
+     jira-01    2  
